@@ -105,6 +105,16 @@ struct PointCloudWithIntensities {
   std::vector<float> intensities;
 };
 
+//  print(df['intensity', 'reflectivity' ,'ambient' , 'range'].hist()
+struct PointCloudWithIRARR {
+  TimedPointCloud points;
+  std::vector<float> intensities;
+  std::vector<float> reflectivities;
+  std::vector<float> ambients;
+  std::vector<float> ranges;
+  std::vector<float> rings;
+};
+
 // Transforms 'point_cloud' according to 'transform'.
 PointCloud TransformPointCloud(const PointCloud& point_cloud,
                                const transform::Rigid3f& transform);
