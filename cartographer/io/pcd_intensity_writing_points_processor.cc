@@ -44,7 +44,7 @@ void WriteBinaryPcdIntensityHeader(const bool has_color, const int64 num_points,
          << "VERSION .7\n"
          << "FIELDS x y z" << " intensity" << color_header_field << "\n"
          << "SIZE 4 4 4" << " 4" << color_header_size  << "\n"
-         << "TYPE F F F"  << " F" << color_header_type  << "\n"
+         << "TYPE F F F"  << " U" << color_header_type  << "\n"
          << "COUNT 1 1 1"  << " 1" << color_header_count << "\n"
          << "WIDTH " << std::setw(15) << std::setfill('0') << num_points << "\n"
          << "HEIGHT 1\n"
@@ -59,11 +59,12 @@ void WriteBinaryPcdIntensityHeader(const bool has_color, const int64 num_points,
 void WriteBinaryPcdIntensityPointCoordinate(const Eigen::Vector3f& point,
                                    const float& intensity,
                                    FileWriter* const file_writer) {
+  unsigned int u_intensity = (unsigned int)intensity;
   char buffer[16];
   memcpy(buffer, &point[0], sizeof(float));
   memcpy(buffer + 4, &point[1], sizeof(float));
   memcpy(buffer + 8, &point[2], sizeof(float));
-  memcpy(buffer + 12, &intensity, sizeof(float));
+  memcpy(buffer + 12, &u_intensity, sizeof(unsigned int));
   CHECK(file_writer->Write(buffer, 12));
 }
 
