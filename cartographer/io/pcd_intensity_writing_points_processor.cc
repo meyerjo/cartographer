@@ -65,7 +65,7 @@ void WriteBinaryPcdIntensityPointCoordinate(const Eigen::Vector3f& point,
   memcpy(buffer + 4, &point[1], sizeof(float));
   memcpy(buffer + 8, &point[2], sizeof(float));
   memcpy(buffer + 12, &u_intensity, sizeof(unsigned int));
-  CHECK(file_writer->Write(buffer, 12));
+  CHECK(file_writer->Write(buffer, 16));
 }
 
 void WriteBinaryPcdPointColor(const Uint8Color& color,
