@@ -27,6 +27,7 @@
 #include "cartographer/io/null_points_processor.h"
 #include "cartographer/io/outlier_removing_points_processor.h"
 #include "cartographer/io/pcd_writing_points_processor.h"
+#include "cartographer/io/pcd_intensity_writing_points_processor.h"
 #include "cartographer/io/ply_writing_points_processor.h"
 #include "cartographer/io/probability_grid_points_processor.h"
 #include "cartographer/io/vertical_range_filtering_points_processor.h"
@@ -90,6 +91,8 @@ void RegisterBuiltInPointsProcessors(
   RegisterPlainPointsProcessor<ColoringPointsProcessor>(builder);
   RegisterPlainPointsProcessor<IntensityToColorPointsProcessor>(builder);
   RegisterFileWritingPointsProcessor<PcdWritingPointsProcessor>(
+      file_writer_factory, builder);
+  RegisterFileWritingPointsProcessor<PcdIntensityWritingPointsProcessor>(
       file_writer_factory, builder);
   RegisterFileWritingPointsProcessor<PlyWritingPointsProcessor>(
       file_writer_factory, builder);
