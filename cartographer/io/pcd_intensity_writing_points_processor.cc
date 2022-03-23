@@ -19,7 +19,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
-#include <algorithms>
+#include <algorithm>
 
 #include "absl/memory/memory.h"
 #include "cartographer/common/lua_parameter_dictionary.h"
@@ -185,7 +185,7 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
     has_ambient_ = !batch->ambients.empty();
     has_range_ = !batch->ranges.empty();
     has_ring_ = !batch->rings.empty();
-    WriteBinaryPcdIntensityHeader(has_colors_, has_intensity_, has_reflectivity_, has_ambient_, has_range_, has_ring_ 0, file_writer_.get());
+    WriteBinaryPcdIntensityHeader(has_colors_, has_intensity_, has_reflectivity_, has_ambient_, has_range_, has_ring_, 0, file_writer_.get());
   }
 
   for (size_t i = 0; i < batch->points.size(); ++i) {
@@ -196,7 +196,7 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
                                file_writer_.get());
     }
     if (!batch->intensities.empty()) {
-      WriteBinaryFloatAsUnsignedInt(batch->intensities[i]), file_writer_.get());
+      WriteBinaryFloatAsUnsignedInt(batch->intensities[i], file_writer_.get());
     }
     if (!batch->reflectivities.empty()) {
       WriteBinaryInteger(batch->reflectivities[i], file_writer_.get());
@@ -211,7 +211,7 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
       WriteBinaryInteger(batch->rings[i], file_writer_.get());
     }
     // write the internal frame_id of the given view
-    WriteBinaryChar(internal_frame_id);
+    WriteBinaryChar(internal_frame_id, file_writer_.get());
 
     ++num_points_;
   }
