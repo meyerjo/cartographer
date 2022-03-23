@@ -48,22 +48,22 @@ void WriteBinaryPcdIntensityHeader(const bool has_color, const bool has_intensit
   std::string intensity_header_count = !has_intensity ? "" : " 1";
 
   std::string reflectivity_header_field = !has_reflectivity ? "" : " reflectivity";
-  std::string reflectivity_header_type = !has_reflectivity ? "" : " I";
+  std::string reflectivity_header_type = !has_reflectivity ? "" : " F";
   std::string reflectivity_header_size = !has_reflectivity ? "" : " 4";
   std::string reflectivity_header_count = !has_reflectivity ? "" : " 1";
 
   std::string ambient_header_field = !has_ambient ? "" : " ambient";
-  std::string ambient_header_type = !has_ambient ? "" : " I";
+  std::string ambient_header_type = !has_ambient ? "" : " F";
   std::string ambient_header_size = !has_ambient ? "" : " 4";
   std::string ambient_header_count = !has_ambient ? "" : " 1";
 
   std::string range_header_field = !has_range ? "" : " range";
-  std::string range_header_type = !has_range ? "" : " I";
+  std::string range_header_type = !has_range ? "" : " F";
   std::string range_header_size = !has_range ? "" : " 4";
   std::string range_header_count = !has_range ? "" : " 1";
 
   std::string ring_header_field = !has_ring ? "" : " ring";
-  std::string ring_header_type = !has_ring ? "" : " I";
+  std::string ring_header_type = !has_ring ? "" : " F";
   std::string ring_header_size = !has_ring ? "" : " 4";
   std::string ring_header_count = !has_ring ? "" : " 1";
 
@@ -72,8 +72,8 @@ void WriteBinaryPcdIntensityHeader(const bool has_color, const bool has_intensit
          << "VERSION .7\n"
          << "FIELDS x y z"  << color_header_field << intensity_header_field << reflectivity_header_field << ambient_header_field << range_header_field << ring_header_field << " frame" << "\n"
          << "SIZE 4 4 4"    << color_header_size  << intensity_header_size  << reflectivity_header_size  << ambient_header_size  << range_header_size  << ring_header_size  << " 1" << "\n"
-         << "TYPE F F F"    << color_header_type  << intensity_header_type  << reflectivity_header_type  << ambient_header_type  << range_header_type  << ring_header_type  << " I"  << "\n"
-         << "COUNT 1 1 1"   << color_header_count << intensity_header_count << reflectivity_header_count << ambient_header_count << range_header_count << ring_header_count << " 1" << "\n"
+         << "TYPE F F F"    << color_header_type  << intensity_header_type  << reflectivity_header_type  << ambient_header_type  << range_header_type  << ring_header_type  << " F"  << "\n"
+         << "COUNT 1 1 1"   << color_header_count << intensity_header_count << reflectivity_header_count << ambient_header_count << range_header_count << ring_header_count << " 4" << "\n"
          << "WIDTH " << std::setw(15) << std::setfill('0') << num_points << "\n"
          << "HEIGHT 1\n"
          << "VIEWPOINT 0 0 0 1 0 0 0\n"
@@ -95,6 +95,12 @@ void WriteBinaryPcdIntensityPointCoordinate(const Eigen::Vector3f& point,
   CHECK(file_writer->Write(buffer, 12));
 }
 
+void WriteBinaryFloat(const float& value,
+                                   FileWriter* const file_writer) {
+  char buffer[4];
+  memcpy(buffer, &value, sizeof(float));
+  CHECK(file_writer->Write(buffer, 4));
+}
 void WriteBinaryFloatAsUnsignedInt(const float& value,
                                    FileWriter* const file_writer) {
   unsigned int u_value = (unsigned int)value;
@@ -199,19 +205,24 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
       WriteBinaryFloatAsUnsignedInt(batch->intensities[i], file_writer_.get());
     }
     if (!batch->reflectivities.empty()) {
-      WriteBinaryInteger(batch->reflectivities[i], file_writer_.get());
+//      WriteBinaryInteger(batch->reflectivities[i], file_writer_.get());
+      WriteBinaryFloat((float)batch->reflectivities[i], file_writer_.get());
     }
     if (!batch->ambients.empty()) {
-      WriteBinaryInteger(batch->ambients[i], file_writer_.get());
+//      WriteBinaryInteger(batch->ambients[i], file_writer_.get());
+      WriteBinaryFloat((float)batch->ambients[i], file_writer_.get());
     }
     if (!batch->ranges.empty()) {
-      WriteBinaryInteger(batch->ranges[i], file_writer_.get());
+//      WriteBinaryInteger(batch->ranges[i], file_writer_.get());
+      WriteBinaryFloat((float)batch->ranges[i], file_writer_.get());
     }
     if (!batch->rings.empty()) {
-      WriteBinaryInteger(batch->rings[i], file_writer_.get());
+//      WriteBinaryInteger(batch->rings[i], file_writer_.get());
+      WriteBinaryFloat((float)batch->rings[i], file_writer_.get());
     }
     // write the internal frame_id of the given view
-    WriteBinaryChar(internal_frame_id, file_writer_.get());
+//    WriteBinaryChar(internal_frame_id, file_writer_.get());
+    WriteBinaryFloat((float)internal_frame_id, file_writer_.get());
 
     ++num_points_;
   }
