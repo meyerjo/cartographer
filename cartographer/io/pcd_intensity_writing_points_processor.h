@@ -15,6 +15,7 @@
  */
 
 #include <fstream>
+#include <vector>
 
 #include "cartographer/common/lua_parameter_dictionary.h"
 #include "cartographer/io/file_writer.h"
@@ -48,6 +49,12 @@ class PcdIntensityWritingPointsProcessor : public PointsProcessor {
 
   int64 num_points_;
   bool has_colors_;
+  bool has_intensity_;
+  bool has_reflectivity_;
+  bool has_ambient_;
+  bool has_range_;
+  bool has_ring_;
+  std::vector<std::string> registered_frame_ids_;
   std::unique_ptr<FileWriter> file_writer_;
 };
 
