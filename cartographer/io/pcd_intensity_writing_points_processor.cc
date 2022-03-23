@@ -206,7 +206,7 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
       WriteBinaryFloatAsUnsignedInt(batch->intensities[i], file_writer_.get());
     }
     if (!batch->reflectivities.empty()) {
-      std::cout << "reflectivity: " << batch->reflectivities[i] << " as float: " (float)batch->reflectivities[i] << std::endl;
+      std::cout << "reflectivity: " << batch->reflectivities[i] << " as float: " << (float)batch->reflectivities[i] << std::endl;
 //      WriteBinaryInteger(batch->reflectivities[i], file_writer_.get());
       WriteBinaryFloat((float)batch->reflectivities[i], file_writer_.get());
     }
