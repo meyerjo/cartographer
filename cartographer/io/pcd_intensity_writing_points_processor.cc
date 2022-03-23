@@ -18,6 +18,7 @@
 
 #include <iomanip>
 #include <sstream>
+#include <iostream>
 #include <string>
 #include <algorithm>
 
@@ -205,6 +206,7 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
       WriteBinaryFloatAsUnsignedInt(batch->intensities[i], file_writer_.get());
     }
     if (!batch->reflectivities.empty()) {
+      std::cout << "reflectivity: " << batch->reflectivities[i] << " as float: " (float)batch->reflectivities[i] << std::endl;
 //      WriteBinaryInteger(batch->reflectivities[i], file_writer_.get());
       WriteBinaryFloat((float)batch->reflectivities[i], file_writer_.get());
     }
@@ -222,6 +224,7 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
     }
     // write the internal frame_id of the given view
 //    WriteBinaryChar(internal_frame_id, file_writer_.get());
+    std::cout << "internal frame id: " << internal_frame_id << " as integer: " << (int)internal_frame_id << " as float: " << (float)internal_frame_id << std::endl;
     WriteBinaryFloat((float)internal_frame_id, file_writer_.get());
 
     ++num_points_;
