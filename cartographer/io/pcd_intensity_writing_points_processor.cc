@@ -206,25 +206,28 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
       WriteBinaryFloatAsUnsignedInt(batch->intensities[i], file_writer_.get());
     }
     if (!batch->reflectivities.empty()) {
-      std::cout << "reflectivity: " << batch->reflectivities[i] << " as float: " << (float)batch->reflectivities[i] << std::endl;
+      std::cout << "[" << batch->frame_id << "] " << "reflectivity: " << batch->reflectivities[i] << " as float: " << (float)batch->reflectivities[i] << " frame_id": << batch->frame_id << std::endl;
 //      WriteBinaryInteger(batch->reflectivities[i], file_writer_.get());
       WriteBinaryFloat((float)batch->reflectivities[i], file_writer_.get());
     }
     if (!batch->ambients.empty()) {
 //      WriteBinaryInteger(batch->ambients[i], file_writer_.get());
+      std::cout << "[" << batch->frame_id << "] " << "ambients: " << batch->ambients[i] << " as float: " << (float)batch->ambients[i] << " frame_id": << batch->frame_id << std::endl;
       WriteBinaryFloat((float)batch->ambients[i], file_writer_.get());
     }
     if (!batch->ranges.empty()) {
 //      WriteBinaryInteger(batch->ranges[i], file_writer_.get());
+      std::cout << "[" << batch->frame_id << "] " << "ranges: " << batch->ranges[i] << " as float: " << (float)batch->ranges[i] << " frame_id": << batch->frame_id << std::endl;
       WriteBinaryFloat((float)batch->ranges[i], file_writer_.get());
     }
     if (!batch->rings.empty()) {
 //      WriteBinaryInteger(batch->rings[i], file_writer_.get());
+      std::cout << "[" << batch->frame_id << "] " << "rings: " << batch->rings[i] << " as float: " << (float)batch->rings[i] << " frame_id": << batch->frame_id << std::endl;
       WriteBinaryFloat((float)batch->rings[i], file_writer_.get());
     }
     // write the internal frame_id of the given view
 //    WriteBinaryChar(internal_frame_id, file_writer_.get());
-    std::cout << "internal frame id: " << internal_frame_id << " as integer: " << (int)internal_frame_id << " as float: " << (float)internal_frame_id << std::endl;
+    std::cout << "[" << batch->frame_id << "] " << "internal frame id: " << internal_frame_id << " as integer: " << (int)internal_frame_id << " as float: " << (float)internal_frame_id << " frame_id": << batch->frame_id << std::endl;
     WriteBinaryFloat((float)internal_frame_id, file_writer_.get());
 
     ++num_points_;
