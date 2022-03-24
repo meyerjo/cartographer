@@ -229,7 +229,7 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
 //    WriteBinaryChar(internal_frame_id, file_writer_.get());
     std::cout << "[" << batch->frame_id << "] " << "internal frame id: " << internal_frame_id << " as integer: " << (int)internal_frame_id << " as float: " << (float)internal_frame_id << " frame_id": << batch->frame_id << std::endl;
     WriteBinaryFloat((float)internal_frame_id, file_writer_.get());
-
+    std::cout << "############################################################" << std::endl;
     ++num_points_;
   }
   next_->Process(std::move(batch));
