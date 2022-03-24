@@ -66,10 +66,10 @@ struct PointsBatch {
   std::vector<FloatColor> colors;
 
   // custom fields
-  std::vector<int> reflectivities;
-  std::vector<int> rings;
-  std::vector<int> ambients;
-  std::vector<int> ranges;
+  std::vector<float> reflectivities;
+  std::vector<float> rings;
+  std::vector<float> ambients;
+  std::vector<float> ranges;
 };
 
 // Removes the indices in 'to_remove' from 'batch'.

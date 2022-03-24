@@ -16,6 +16,7 @@
 
 #include <fstream>
 #include <vector>
+#include <string>
 
 #include "cartographer/common/lua_parameter_dictionary.h"
 #include "cartographer/io/file_writer.h"
@@ -28,7 +29,7 @@ namespace io {
 class PcdIntensityWritingPointsProcessor : public PointsProcessor {
  public:
   constexpr static const char* kConfigurationFileActionName = "write_pcd_intensity";
-  PcdIntensityWritingPointsProcessor(std::unique_ptr<FileWriter> file_writer,
+  PcdIntensityWritingPointsProcessor(std::unique_ptr<FileWriter> file_writer, std::string export_fields,
                             PointsProcessor* next);
 
   static std::unique_ptr<PcdIntensityWritingPointsProcessor> FromDictionary(
@@ -54,6 +55,7 @@ class PcdIntensityWritingPointsProcessor : public PointsProcessor {
   bool has_ambient_;
   bool has_range_;
   bool has_ring_;
+  std::string export_fields_;
   std::vector<std::string> registered_frame_ids_;
   std::unique_ptr<FileWriter> file_writer_;
 };

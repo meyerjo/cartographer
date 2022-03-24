@@ -141,11 +141,11 @@ PcdIntensityWritingPointsProcessor::FromDictionary(
     common::LuaParameterDictionary* const dictionary,
     PointsProcessor* const next) {
   return absl::make_unique<PcdIntensityWritingPointsProcessor>(
-      file_writer_factory(dictionary->GetString("filename")), next);
+      file_writer_factory(dictionary->GetString("filename")), dictionary->GetString("export_fields"), next);
 }
 
 PcdIntensityWritingPointsProcessor::PcdIntensityWritingPointsProcessor(
-    std::unique_ptr<FileWriter> file_writer, PointsProcessor* const next)
+    std::unique_ptr<FileWriter> file_writer, std::string export_fields, PointsProcessor* const next)
     : next_(next),
       num_points_(0),
       has_colors_(false),
@@ -154,6 +154,7 @@ PcdIntensityWritingPointsProcessor::PcdIntensityWritingPointsProcessor(
       has_ambient_(false),
       has_range_(false),
       has_ring_(false),
+      export_fields_(export_fields),
       file_writer_(std::move(file_writer)) {}
 
 PointsProcessor::FlushResult PcdIntensityWritingPointsProcessor::Flush() {
@@ -183,7 +184,7 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
     registered_frame_ids_.push_back(batch->frame_id);
     it = std::find(registered_frame_ids_.begin(), registered_frame_ids_.end(), batch->frame_id);
   }
-  char internal_frame_id = (char)(it - registered_frame_ids_.begin());
+  float internal_frame_id = static_cast<float>(it - registered_frame_ids_.begin());
 
   if (num_points_ == 0) {
     has_colors_ = !batch->colors.empty();
