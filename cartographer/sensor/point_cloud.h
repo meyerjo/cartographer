@@ -109,10 +109,10 @@ struct PointCloudWithIntensities {
 struct PointCloudWithIRARR {
   TimedPointCloud points;
   std::vector<float> intensities;
-  std::vector<float> reflectivities;
-  std::vector<float> ambients;
-  std::vector<float> ranges;
-  std::vector<float> rings;
+  std::vector<uint16_t> reflectivities;
+  std::vector<uint16_t> ambients;
+  std::vector<uint32_t> ranges;
+  std::vector<uint8_t> rings;
 };
 
 // Transforms 'point_cloud' according to 'transform'.
