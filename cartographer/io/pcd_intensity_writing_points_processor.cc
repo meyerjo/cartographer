@@ -117,7 +117,7 @@ void WriteUInt8_fieldsize_2(const uint8_t& value,
   CHECK(file_writer->Write(buffer, 2));
 }
 
-void WriteUInt16_fieldsize_4(const uint16_t& value, const int field_size,
+void WriteUInt16_fieldsize_4(const uint16_t& value,
                                    FileWriter* const file_writer) {
   char buffer[4];
   memcpy(buffer, &value, sizeof(uint16_t));
