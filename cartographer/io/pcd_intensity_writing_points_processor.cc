@@ -286,8 +286,8 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
     }
     if (!batch->ranges.empty() && export_range_) {
       uint32_t range_value = (uint32_t)batch->ranges[i];
-      std::cerr << "###" << std::endl;
       if (i < 10) {
+        std::cerr << "###" << std::endl;
         std::cerr << "range " << i << ": " << range_value << std::endl;
       }
       WriteUInt32_with_fieldsize_4(range_value, file_writer_.get());
