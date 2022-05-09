@@ -38,6 +38,14 @@ namespace {
 void WriteBinaryPcdIntensityHeader(const bool has_color, const bool has_intensity, const bool has_reflectivity,
                             const bool has_ambient, const bool has_range, const bool has_ring, const int64 num_points,
                           FileWriter* const file_writer) {
+  std::cerr << "has_color " << has_color << std::endl;
+  std::cerr << "has_intensity " << has_intensity << std::endl;
+  std::cerr << "has_reflectivity " << has_reflectivity << std::endl;
+  std::cerr << "has_ambient " << has_ambient << std::endl;
+  std::cerr << "has_range " << has_range << std::endl;
+  std::cerr << "has_ring " << has_ring << std::endl;
+
+
   std::string color_header_field = !has_color ? "" : " rgb";
   std::string color_header_type = !has_color ? "" : " U";
   std::string color_header_size = !has_color ? "" : " 4";
@@ -249,7 +257,7 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
        0,
        file_writer_.get());
   }
-
+//<< color_header_field << intensity_header_field << reflectivity_header_field << ambient_header_field << range_header_field << ring_header_field
   for (size_t i = 0; i < batch->points.size(); ++i) {
     WriteBinaryPcdIntensityPointCoordinate(batch->points[i].position,
                                   file_writer_.get());
@@ -261,24 +269,20 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
       WriteBinaryFloatAsUnsignedInt(batch->intensities[i], file_writer_.get());
     }
     if (!batch->reflectivities.empty() && export_reflectivity_) {
-//       std::cout << "[" << batch->frame_id << "] " << "reflectivity: " << batch->reflectivities[i] << " as float: " << (uint16_t)batch->reflectivities[i] << " frame_id: " << batch->frame_id << std::endl;
-//      WriteBinaryInteger(batch->reflectivities[i], file_writer_.get());
-      WriteUInt16_fieldsize_2((uint16_t)batch->reflectivities[i], file_writer_.get());
+      uint16_t reflectivity_value = (uint16_t)batch->reflectivities[i];
+      WriteUInt16_fieldsize_2(reflectivity_value, file_writer_.get());
     }
     if (!batch->ambients.empty() && export_ambient_) {
-//      WriteBinaryInteger(batch->ambients[i], file_writer_.get());
- //      std::cout << "[" << batch->frame_id << "] " << "ambients: " << batch->ambients[i] << " as float: " << (uint32_t)batch->ambients[i] << " frame_id: " << batch->frame_id << std::endl;
-      WriteUInt16_fieldsize_4((uint16_t)batch->ambients[i], file_writer_.get());
+      uint16_t ambient_value = (uint16_t)batch->ambients[i];
+      WriteUInt16_fieldsize_4(ambient_value, file_writer_.get());
     }
     if (!batch->ranges.empty() && export_range_) {
-//      WriteBinaryInteger(batch->ranges[i], file_writer_.get());
-  //     std::cout << "[" << batch->frame_id << "] " << "ranges: " << batch->ranges[i] << " as float: " << (uint32_t)batch->ranges[i] << " frame_id: " << batch->frame_id << std::endl;
-      WriteUInt32_with_fieldsize_4((uint32_t)batch->ranges[i], file_writer_.get());
+      uint32_t range_value = (uint32_t)batch->ranges[i];
+      WriteUInt32_with_fieldsize_4(range_value, file_writer_.get());
     }
     if (!batch->rings.empty() && export_ring_) {
-//      WriteBinaryInteger(batch->rings[i], file_writer_.get());
-  //    std::cout << "[" << batch->frame_id << "] " << "rings: " << batch->rings[i] << " as float: " << (uint8_t)batch->rings[i] << " frame_id: " << batch->frame_id << std::endl;
-      WriteBinaryFloat((uint8_t)batch->rings[i], file_writer_.get());
+      uint8_t ring_value = (uint8_t)batch->rings[i];
+      WriteBinaryFloat(ring_value, file_writer_.get());
     }
     // write the internal frame_id of the given view
 //    WriteBinaryChar(internal_frame_id, file_writer_.get());
