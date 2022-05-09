@@ -185,7 +185,7 @@ PcdIntensityWritingPointsProcessor::PcdIntensityWritingPointsProcessor(
       has_ring_(false),
       export_fields_(export_fields),
       file_writer_(std::move(file_writer)) {
-      std::cout << "export_fields_: " << export_fields_ << std::endl;
+      std::cerr << "export_fields_: " << export_fields_ << std::endl;
       if (!export_fields_.empty()) {
       export_reflectivity_ = export_fields_.find("reflectivity") != std::string::npos;
       export_ambient_ = export_fields_.find("ambient") != std::string::npos;
@@ -197,10 +197,10 @@ PcdIntensityWritingPointsProcessor::PcdIntensityWritingPointsProcessor(
          export_range_ = true;
          export_ring_ = true;
       }
-      std::cout << "export reflectivity: " << export_reflectivity_ << std::endl;
-      std::cout << "export ambient: " << export_ambient_ << std::endl;
-      std::cout << "export range: " << export_range_ << std::endl;
-      std::cout << "export ring: " << export_ring_ << std::endl;
+      std::cerr << "export reflectivity: " << export_reflectivity_ << std::endl;
+      std::cerr << "export ambient: " << export_ambient_ << std::endl;
+      std::cerr << "export range: " << export_range_ << std::endl;
+      std::cerr << "export ring: " << export_ring_ << std::endl;
       }
 
 PointsProcessor::FlushResult PcdIntensityWritingPointsProcessor::Flush() {
