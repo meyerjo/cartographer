@@ -212,8 +212,16 @@ PcdIntensityWritingPointsProcessor::PcdIntensityWritingPointsProcessor(
       }
 
 PointsProcessor::FlushResult PcdIntensityWritingPointsProcessor::Flush() {
-  WriteBinaryPcdIntensityHeader(has_colors_, has_intensity_, has_reflectivity_, has_ambient_,
-                               has_range_, has_ring_, num_points_, file_writer_.get());
+  WriteBinaryPcdIntensityHeader(
+    has_colors_,
+    has_intensity_,
+    has_reflectivity_ && export_reflectivity_,
+    has_ambient_ && export_ambient_,
+    has_range_ && export_range_,
+    has_ring_ && export_ring_,
+    num_points_,
+    file_writer_.get()
+  );
   CHECK(file_writer_->Close());
 
   switch (next_->Flush()) {
