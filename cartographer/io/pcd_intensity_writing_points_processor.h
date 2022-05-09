@@ -55,6 +55,12 @@ class PcdIntensityWritingPointsProcessor : public PointsProcessor {
   bool has_ambient_;
   bool has_range_;
   bool has_ring_;
+
+  bool export_reflectivity_;
+  bool export_ambient_;
+  bool export_range_;
+  bool export_ring_;
+
   std::string export_fields_;
   std::vector<std::string> registered_frame_ids_;
   std::unique_ptr<FileWriter> file_writer_;

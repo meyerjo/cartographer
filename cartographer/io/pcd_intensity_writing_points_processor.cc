@@ -184,7 +184,24 @@ PcdIntensityWritingPointsProcessor::PcdIntensityWritingPointsProcessor(
       has_range_(false),
       has_ring_(false),
       export_fields_(export_fields),
-      file_writer_(std::move(file_writer)) {}
+      file_writer_(std::move(file_writer)) {
+      std::cout << "export_fields_: " << export_fields_ << std::endl;
+      if (!export_fields_.empty()) {
+      export_reflectivity_ = export_fields_.find("reflectivity") != std::string::npos;
+      export_ambient_ = export_fields_.find("ambient") != std::string::npos;
+      export_range_ = export_fields_.find("range") != std::string::npos;
+      export_ring_ = export_fields_.find("ring") != std::string::npos;
+      } else {
+         export_reflectivity_ = true;
+         export_ambient_ = true;
+         export_range_ = true;
+         export_ring_ = true;
+      }
+      std::cout << "export reflectivity: " << export_reflectivity_ << std::endl;
+      std::cout << "export ambient: " << export_ambient_ << std::endl;
+      std::cout << "export range: " << export_range_ << std::endl;
+      std::cout << "export ring: " << export_ring_ << std::endl;
+      }
 
 PointsProcessor::FlushResult PcdIntensityWritingPointsProcessor::Flush() {
   WriteBinaryPcdIntensityHeader(has_colors_, has_intensity_, has_reflectivity_, has_ambient_,
@@ -222,7 +239,15 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
     has_ambient_ = !batch->ambients.empty();
     has_range_ = !batch->ranges.empty();
     has_ring_ = !batch->rings.empty();
-    WriteBinaryPcdIntensityHeader(has_colors_, has_intensity_, has_reflectivity_, has_ambient_, has_range_, has_ring_, 0, file_writer_.get());
+    WriteBinaryPcdIntensityHeader(
+       has_colors_,
+       has_intensity_,
+       has_reflectivity_ && export_reflectivity_,
+       has_ambient_ && export_ambient_,
+       has_range_ && export_range_,
+       has_ring_ && export_ring_,
+       0,
+       file_writer_.get());
   }
 
   for (size_t i = 0; i < batch->points.size(); ++i) {
@@ -235,22 +260,22 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
     if (!batch->intensities.empty()) {
       WriteBinaryFloatAsUnsignedInt(batch->intensities[i], file_writer_.get());
     }
-    if (!batch->reflectivities.empty()) {
+    if (!batch->reflectivities.empty() && export_reflectivity_) {
 //       std::cout << "[" << batch->frame_id << "] " << "reflectivity: " << batch->reflectivities[i] << " as float: " << (uint16_t)batch->reflectivities[i] << " frame_id: " << batch->frame_id << std::endl;
 //      WriteBinaryInteger(batch->reflectivities[i], file_writer_.get());
       WriteUInt16_fieldsize_2((uint16_t)batch->reflectivities[i], file_writer_.get());
     }
-    if (!batch->ambients.empty()) {
+    if (!batch->ambients.empty() && export_ambient_) {
 //      WriteBinaryInteger(batch->ambients[i], file_writer_.get());
  //      std::cout << "[" << batch->frame_id << "] " << "ambients: " << batch->ambients[i] << " as float: " << (uint32_t)batch->ambients[i] << " frame_id: " << batch->frame_id << std::endl;
       WriteUInt16_fieldsize_4((uint16_t)batch->ambients[i], file_writer_.get());
     }
-    if (!batch->ranges.empty()) {
+    if (!batch->ranges.empty() && export_range_) {
 //      WriteBinaryInteger(batch->ranges[i], file_writer_.get());
   //     std::cout << "[" << batch->frame_id << "] " << "ranges: " << batch->ranges[i] << " as float: " << (uint32_t)batch->ranges[i] << " frame_id: " << batch->frame_id << std::endl;
       WriteUInt32_with_fieldsize_4((uint32_t)batch->ranges[i], file_writer_.get());
     }
-    if (!batch->rings.empty()) {
+    if (!batch->rings.empty() && export_ring_) {
 //      WriteBinaryInteger(batch->rings[i], file_writer_.get());
   //    std::cout << "[" << batch->frame_id << "] " << "rings: " << batch->rings[i] << " as float: " << (uint8_t)batch->rings[i] << " frame_id: " << batch->frame_id << std::endl;
       WriteBinaryFloat((uint8_t)batch->rings[i], file_writer_.get());
