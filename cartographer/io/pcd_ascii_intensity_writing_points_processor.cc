@@ -277,7 +277,7 @@ void PcdAsciiIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatc
   for (size_t i = 0; i < batch->points.size(); ++i) {
 
     std::ostringstream stream;
-    stream << batch->points[i].position.x << " " << batch->points[i].position.y << " " << batch->points[i].position.z;
+    stream << batch->points[i].position[0] << " " << batch->points[i].position[1] << " " << batch->points[i].position[2];
     stream << " " << batch->intensities[i];
     stream << " " << float_eigen_range_values[i];
     stream << " " << (float)internal_frame_id;
