@@ -293,7 +293,7 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
       WriteUInt16_fieldsize_4(ambient_value, file_writer_.get());
     }
     if (!batch->ranges.empty() && export_range_) {
-      WriteBinaryFloat(float_eigen_range_values[i], file_writer_.get());
+      WriteBinaryFloatAsUnsignedInt(float_eigen_range_values[i], file_writer_.get());
 //      uint32_t range_value = batch->ranges[i];
 //      WriteUInt32_with_fieldsize_4(range_value, file_writer_.get());
     }
