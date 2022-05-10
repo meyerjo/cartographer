@@ -283,7 +283,7 @@ void PcdAsciiIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatc
     stream << " " << (float)internal_frame_id;
     stream << "\n";
     const std::string out = stream.str();
-    file_writer->Write(out.data(), out.size());
+    file_writer_->Write(out.data(), out.size());
     ++num_points_;
   }
   next_->Process(std::move(batch));
