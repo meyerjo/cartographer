@@ -275,37 +275,15 @@ void PcdAsciiIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatc
 
 //<< color_header_field << intensity_header_field << reflectivity_header_field << ambient_header_field << range_header_field << ring_header_field
   for (size_t i = 0; i < batch->points.size(); ++i) {
-    WriteBinaryPcdIntensityPointCoordinate(batch->points[i].position,
-                                  file_writer_.get());
-    if (!batch->colors.empty()) {
-      WriteBinaryPcdPointColor(ToUint8Color(batch->colors[i]),
-                               file_writer_.get());
-    }
-    if (!batch->intensities.empty()) {
-      WriteBinaryFloatAsUnsignedInt(batch->intensities[i], file_writer_.get());
-    }
-    if (!batch->reflectivities.empty() && export_reflectivity_) {
-      uint16_t reflectivity_value = (uint16_t)batch->reflectivities[i];
-      WriteUInt16_fieldsize_2(reflectivity_value, file_writer_.get());
-    }
-    if (!batch->ambients.empty() && export_ambient_) {
-      uint16_t ambient_value = (uint16_t)batch->ambients[i];
-      WriteUInt16_fieldsize_4(ambient_value, file_writer_.get());
-    }
-    if (!batch->ranges.empty() && export_range_) {
-      WriteBinaryFloatAsUnsignedInt(float_eigen_range_values[i], file_writer_.get());
-//      uint32_t range_value = batch->ranges[i];
-//      WriteUInt32_with_fieldsize_4(range_value, file_writer_.get());
-    }
-    if (!batch->rings.empty() && export_ring_) {
-      uint8_t ring_value = (uint8_t)batch->rings[i];
-      WriteBinaryFloat(ring_value, file_writer_.get());
-    }
-    // write the internal frame_id of the given view
-//    WriteBinaryChar(internal_frame_id, file_writer_.get());
-   // std::cout << "[" << batch->frame_id << "] " << "internal frame id: " << internal_frame_id << " as integer: " << (int)internal_frame_id << " as float: " << (float)internal_frame_id << " frame_id: " << batch->frame_id << std::endl;
-    WriteBinaryFloat((float)internal_frame_id, file_writer_.get());
- //    std::cout << "############################################################" << std::endl;
+
+    std::ostringstream stream;
+    stream << batch->points[i].position.x << " " << batch->points[i].position.y << " " << batch->points[i].position.z;
+    stream << " " << batch->intensities[i];
+    stream << " " << float_eigen_range_values[i];
+    stream << " " << (float)internal_frame_id;
+    stream << "\n";
+    const std::string out = stream.str();
+    file_writer->Write(out.data(), out.size());
     ++num_points_;
   }
   next_->Process(std::move(batch));
