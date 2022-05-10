@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "cartographer/io/pcd_intensity_writing_points_processor.h"
+#include "cartographer/io/pcd_ascii_intensity_writing_points_processor.h"
 
 #include <iomanip>
 #include <sstream>
