@@ -22,6 +22,9 @@
 #include <string>
 #include <algorithm>
 
+#include <Eigen/Dense>
+#include <Eigen/Core>
+
 #include "absl/memory/memory.h"
 #include "cartographer/common/lua_parameter_dictionary.h"
 #include "cartographer/io/points_batch.h"
@@ -67,7 +70,7 @@ void WriteBinaryPcdIntensityHeader(const bool has_color, const bool has_intensit
   std::string ambient_header_count = !has_ambient ? "" : " 1";
 
   std::string range_header_field = !has_range ? "" : " range";
-  std::string range_header_type = !has_range ? "" : " U";
+  std::string range_header_type = !has_range ? "" : " F";
   std::string range_header_size = !has_range ? "" : " 4";
   std::string range_header_count = !has_range ? "" : " 1";
 
@@ -193,22 +196,22 @@ PcdIntensityWritingPointsProcessor::PcdIntensityWritingPointsProcessor(
       has_ring_(false),
       export_fields_(export_fields),
       file_writer_(std::move(file_writer)) {
-      std::cerr << "export_fields_: " << export_fields_ << std::endl;
-      if (!export_fields_.empty()) {
-      export_reflectivity_ = export_fields_.find("reflectivity") != std::string::npos;
-      export_ambient_ = export_fields_.find("ambient") != std::string::npos;
-      export_range_ = export_fields_.find("range") != std::string::npos;
-      export_ring_ = export_fields_.find("ring") != std::string::npos;
-      } else {
-         export_reflectivity_ = true;
-         export_ambient_ = true;
-         export_range_ = true;
-         export_ring_ = true;
-      }
-      std::cerr << "export reflectivity: " << export_reflectivity_ << std::endl;
-      std::cerr << "export ambient: " << export_ambient_ << std::endl;
-      std::cerr << "export range: " << export_range_ << std::endl;
-      std::cerr << "export ring: " << export_ring_ << std::endl;
+        std::cerr << "export_fields_: " << export_fields_ << std::endl;
+        if (!export_fields_.empty()) {
+          export_reflectivity_ = export_fields_.find("reflectivity") != std::string::npos;
+          export_ambient_ = export_fields_.find("ambient") != std::string::npos;
+          export_range_ = export_fields_.find("range") != std::string::npos;
+          export_ring_ = export_fields_.find("ring") != std::string::npos;
+        } else {
+          export_reflectivity_ = true;
+          export_ambient_ = true;
+          export_range_ = true;
+          export_ring_ = true;
+        }
+        std::cerr << "export reflectivity: " << export_reflectivity_ << std::endl;
+        std::cerr << "export ambient: " << export_ambient_ << std::endl;
+        std::cerr << "export range: " << export_range_ << std::endl;
+        std::cerr << "export ring: " << export_ring_ << std::endl;
       }
 
 PointsProcessor::FlushResult PcdIntensityWritingPointsProcessor::Flush() {
@@ -265,6 +268,11 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
        0,
        file_writer_.get());
   }
+
+  std::vector<uint32_t> range_values = batch->ranges;
+  Eigen::Matrix<uint32_t, Eigen::Dynamic, 1> eigen_range_values = Eigen::Map<Eigen::Matrix<uint32_t, Eigen::Dynamic, 1>, Eigen::Unaligned>(range_values.data(), range_values.size());
+  Eigen::VectorXf float_eigen_range_values = eigen_range_values.cast <float> ();
+
 //<< color_header_field << intensity_header_field << reflectivity_header_field << ambient_header_field << range_header_field << ring_header_field
   for (size_t i = 0; i < batch->points.size(); ++i) {
     WriteBinaryPcdIntensityPointCoordinate(batch->points[i].position,
@@ -285,12 +293,9 @@ void PcdIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatch> ba
       WriteUInt16_fieldsize_4(ambient_value, file_writer_.get());
     }
     if (!batch->ranges.empty() && export_range_) {
-      uint32_t range_value = (uint32_t)batch->ranges[i];
-      if (i < 10) {
-        std::cerr << "###" << std::endl;
-        std::cerr << "range " << i << ": " << range_value << std::endl;
-      }
-      WriteUInt32_with_fieldsize_4(range_value, file_writer_.get());
+      WriteBinaryFloat(float_eigen_range_values[i], file_writer_.get());
+//      uint32_t range_value = batch->ranges[i];
+//      WriteUInt32_with_fieldsize_4(range_value, file_writer_.get());
     }
     if (!batch->rings.empty() && export_ring_) {
       uint8_t ring_value = (uint8_t)batch->rings[i];
