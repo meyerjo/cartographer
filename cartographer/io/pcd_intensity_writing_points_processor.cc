@@ -70,7 +70,7 @@ void WriteBinaryPcdIntensityHeader(const bool has_color, const bool has_intensit
   std::string ambient_header_count = !has_ambient ? "" : " 1";
 
   std::string range_header_field = !has_range ? "" : " range";
-  std::string range_header_type = !has_range ? "" : " F";
+  std::string range_header_type = !has_range ? "" : " U";
   std::string range_header_size = !has_range ? "" : " 4";
   std::string range_header_count = !has_range ? "" : " 1";
 
