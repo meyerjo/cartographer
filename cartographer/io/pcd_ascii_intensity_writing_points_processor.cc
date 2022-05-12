@@ -76,7 +76,7 @@ void WriteBinaryPcdIntensityHeader(const bool has_color, const bool has_intensit
 
   std::string ring_header_field = !has_ring ? "" : " ring";
   std::string ring_header_type = !has_ring ? "" : " U";
-  std::string ring_header_size = !has_ring ? "" : " 2";
+  std::string ring_header_size = !has_ring ? "" : " 4";
   std::string ring_header_count = !has_ring ? "" : " 1";
 
   std::ostringstream stream;
@@ -94,83 +94,6 @@ void WriteBinaryPcdIntensityHeader(const bool has_color, const bool has_intensit
          << "DATA ascii\n";
   const std::string out = stream.str();
   file_writer->WriteHeader(out.data(), out.size());
-}
-
-void WriteBinaryPcdIntensityPointCoordinate(const Eigen::Vector3f& point,
-                                   FileWriter* const file_writer) {
-//  unsigned int u_intensity = (unsigned int)intensity;
-  char buffer[12];
-  memcpy(buffer, &point[0], sizeof(float));
-  memcpy(buffer + 4, &point[1], sizeof(float));
-  memcpy(buffer + 8, &point[2], sizeof(float));
-//  memcpy(buffer + 12, &u_intensity, sizeof(unsigned int));
-  CHECK(file_writer->Write(buffer, 12));
-}
-
-void WriteBinaryFloat(const float& value,
-                                   FileWriter* const file_writer) {
-  char buffer[4];
-  memcpy(buffer, &value, sizeof(float));
-  CHECK(file_writer->Write(buffer, 4));
-}
-
-void WriteUInt16_fieldsize_2(const uint16_t& value,
-                                   FileWriter* const file_writer) {
-  char buffer[2];
-  memcpy(buffer, &value, sizeof(uint16_t));
-  CHECK(file_writer->Write(buffer, 2));
-}
-
-void WriteUInt8_fieldsize_2(const uint8_t& value,
-                                   FileWriter* const file_writer) {
-  char buffer[2];
-  memcpy(buffer, &value, sizeof(uint8_t));
-  CHECK(file_writer->Write(buffer, 2));
-}
-
-void WriteUInt16_fieldsize_4(const uint16_t& value,
-                                   FileWriter* const file_writer) {
-  char buffer[4];
-  memcpy(buffer, &value, sizeof(uint16_t));
-  CHECK(file_writer->Write(buffer, 4));
-}
-
-void WriteUInt32_with_fieldsize_4(const uint32_t& value,
-                                   FileWriter* const file_writer) {
-  char buffer[4];
-  memcpy(buffer, &value, sizeof(uint32_t));
-  CHECK(file_writer->Write(buffer, 4));
-}
-
-void WriteBinaryFloatAsUnsignedInt(const float& value,
-                                   FileWriter* const file_writer) {
-  unsigned int u_value = (unsigned int)value;
-  char buffer[4];
-  memcpy(buffer, &u_value, sizeof(unsigned int));
-  CHECK(file_writer->Write(buffer, 4));
-}
-
-void WriteBinaryInteger(const int& value,
-                                   FileWriter* const file_writer) {
-  char buffer[4];
-  memcpy(buffer, &value, sizeof(int));
-  CHECK(file_writer->Write(buffer, 4));
-}
-void WriteBinaryChar(const char& value,
-                                   FileWriter* const file_writer) {
-  char buffer[1];
-  memcpy(buffer, &value, sizeof(char));
-  CHECK(file_writer->Write(buffer, 1));
-}
-
-void WriteBinaryPcdPointColor(const Uint8Color& color,
-                              FileWriter* const file_writer) {
-  char buffer[4];
-  buffer[0] = color[2];
-  buffer[1] = color[1];
-  buffer[2] = color[0];
-  buffer[3] = 0;
-  CHECK(file_writer->Write(buffer, 4));
 }
 
 }  // namespace
@@ -196,7 +119,6 @@ PcdAsciiIntensityWritingPointsProcessor::PcdAsciiIntensityWritingPointsProcessor
       has_ring_(false),
       export_fields_(export_fields),
       file_writer_(std::move(file_writer)) {
-        std::cerr << "export_fields_: " << export_fields_ << std::endl;
         if (!export_fields_.empty()) {
           export_reflectivity_ = export_fields_.find("reflectivity") != std::string::npos;
           export_ambient_ = export_fields_.find("ambient") != std::string::npos;
@@ -208,10 +130,6 @@ PcdAsciiIntensityWritingPointsProcessor::PcdAsciiIntensityWritingPointsProcessor
           export_range_ = true;
           export_ring_ = true;
         }
-        std::cerr << "export reflectivity: " << export_reflectivity_ << std::endl;
-        std::cerr << "export ambient: " << export_ambient_ << std::endl;
-        std::cerr << "export range: " << export_range_ << std::endl;
-        std::cerr << "export ring: " << export_ring_ << std::endl;
       }
 
 PointsProcessor::FlushResult PcdAsciiIntensityWritingPointsProcessor::Flush() {
@@ -278,8 +196,31 @@ void PcdAsciiIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatc
 
     std::ostringstream stream;
     stream << batch->points[i].position[0] << " " << batch->points[i].position[1] << " " << batch->points[i].position[2];
-    stream << " " << batch->intensities[i];
-    stream << " " << float_eigen_range_values[i];
+    //  color_header_field <<
+    if (!batch->colors.empty()) {
+      stream << " " << batch->colors[i];
+    }
+    // intensity_header_field <<
+    if (!batch->intensities.empty()) {
+      stream << " " << batch->intensities[i];
+    }
+    // reflectivity_header_field <<
+    if (!batch->reflectivities.empty() && export_reflectivity_) {
+      stream << " " << static_cast<float>(batch->reflectivities[i]);
+    }
+    // ambient_header_field <<
+    if (!batch->ambients.empty() && export_ambient_) {
+      stream << " " << static_cast<float>(batch->ambients[i]);
+    }
+    // range_header_field <<
+    if (!batch->ranges.empty() && export_range_) {
+      stream << " " << float_eigen_range_values[i];
+    }
+    //  ring_header_field <<
+    if (!batch->rings.empty() && export_ring_) {
+      stream << " " << static_cast<float>(batch->rings[i]);
+    }
+    // " frame" << "\n"
     stream << " " << (float)internal_frame_id;
     stream << "\n";
     const std::string out = stream.str();
