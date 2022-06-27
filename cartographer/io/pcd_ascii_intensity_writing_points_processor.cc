@@ -198,7 +198,8 @@ void PcdAsciiIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatc
     stream << batch->points[i].position[0] << " " << batch->points[i].position[1] << " " << batch->points[i].position[2];
     //  color_header_field <<
     if (!batch->colors.empty()) {
-      stream << " " << batch->colors[i];
+      std::uint32_t rgb = ((std::uint32_t)batch->colors[i][0] << 16 | (std::uint32_t)batch->colors[i][1] << 8 | (std::uint32_t)batch->colors[i][0]);
+      stream << " " << rgb;
     }
     // intensity_header_field <<
     if (!batch->intensities.empty()) {
