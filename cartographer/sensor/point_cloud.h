@@ -115,6 +115,16 @@ struct PointCloudWithIRARR {
   std::vector<uint8_t> rings;
 };
 
+struct PointCloudWithIRARRC {
+  TimedPointCloud points;
+  std::vector<float> intensities;
+  std::vector<uint16_t> reflectivities;
+  std::vector<uint16_t> ambients;
+  std::vector<uint32_t> ranges;
+  std::vector<uint8_t> rings;
+  std::vector<uint32_t> colors;
+};
+
 // Transforms 'point_cloud' according to 'transform'.
 PointCloud TransformPointCloud(const PointCloud& point_cloud,
                                const transform::Rigid3f& transform);
