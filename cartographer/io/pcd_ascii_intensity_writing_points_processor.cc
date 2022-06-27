@@ -35,6 +35,24 @@ namespace io {
 
 namespace {
 
+std::uint32_t fromBGRAfloat_to_RGB(std::uint32_t input_rgba) {
+
+    // spliting the 32 bits up into the individual parts, we assume BGRA here
+    std::uint32_t rgba = *reinterpret_cast<int*>(&input_rgba);
+    std::uint8_t b = (rgba >> 24) & 0x0000ff;
+    std::uint8_t g = (rgba >> 16) & 0x0000ff;
+    std::uint8_t r = (rgba >> 8)  & 0x0000ff;
+    std::uint8_t a = (rgba)       & 0x0000ff;
+//
+    return ((std::uint32_t)r << 16 | (std::uint32_t)g << 8 | (std::uint32_t)b);
+//    std::uint32_t rgb = ((std::uint32_t)r << 16 | (std::uint32_t)g << 8 | (std::uint32_t)b);
+//
+//    const cartographer::io::Uint8Color color = {
+//       {static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b)}};
+//    return cartographer::io::ToFloatColor(color);
+}
+
+
 // Writes the PCD header claiming 'num_points' will follow it into
 // 'output_file'.
 // https://pointclouds.org/documentation/tutorials/pcd_file_format.html
@@ -198,8 +216,10 @@ void PcdAsciiIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatc
     stream << batch->points[i].position[0] << " " << batch->points[i].position[1] << " " << batch->points[i].position[2];
     //  color_header_field <<
     if (!batch->colors.empty()) {
-      std::uint32_t rgb = ((std::uint32_t)batch->colors[i][0] << 16 | (std::uint32_t)batch->colors[i][1] << 8 | (std::uint32_t)batch->colors[i][0]);
-      stream << " " << rgb;
+      cartographer::io::Uint8Color uint8_color = ToUint8Color(batch->colors[i]);
+      std::uint32_t color =  ((std::uint32_t)uint8_color[0] << 16 | (std::uint32_t)uint8_color[1] << 8 | (std::uint32_t)uint8_color[2]);
+//      std::uint32_t rgb = fromBGRAfloat_to_RGB(batch->colors[i]);
+      stream << " " << color;
     }
     // intensity_header_field <<
     if (!batch->intensities.empty()) {
