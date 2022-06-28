@@ -204,7 +204,7 @@ void PcdAsciiIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatc
 //      std::uint32_t rgb = fromBGRAfloat_to_RGB(batch->colors[i]);
       std::cerr << "rgb: r=" << (std::uint32_t)uint8_color[0] << " g=" << (std::uint32_t)uint8_color[1] << " b=" << (std::uint32_t)uint8_color[2] << " color=" << color << " (" << (float)uint8_color[0] << ", " << (float)uint8_color[1] << ", " << (float)uint8_color[2] << ")" <<std::endl;
       float c = *reinterpret_cast<float*>(&color);;
-      stream << " " << c << " " static_cast<float>(uint8_color[0]) << " " << static_cast<float>(uint8_color[1]) << " " << static_cast<float>(uint8_color[2]);
+      stream << " " << c << " " << static_cast<float>(uint8_color[0]) << " " << static_cast<float>(uint8_color[1]) << " " << static_cast<float>(uint8_color[2]);
     }
     // intensity_header_field <<
     if (!batch->intensities.empty()) {
