@@ -50,10 +50,10 @@ void WriteBinaryPcdIntensityHeader(const bool has_color, const bool has_intensit
   std::cerr << "has_ring " << has_ring << std::endl;
 
 
-  std::string color_header_field = !has_color ? "" : " rgb";
-  std::string color_header_type = !has_color ? "" : " U";
-  std::string color_header_size = !has_color ? "" : " 4";
-  std::string color_header_count = !has_color ? "" : " 1";
+  std::string color_header_field = !has_color ? "" : " rgb red green blue";
+  std::string color_header_type = !has_color ? "" : " U F F F";
+  std::string color_header_size = !has_color ? "" : " 4 8 8 8";
+  std::string color_header_count = !has_color ? "" : " 1 1 1 1";
 
   std::string intensity_header_field = !has_intensity ? "" : " intensity";
   std::string intensity_header_type = !has_intensity ? "" : " U";
@@ -204,7 +204,7 @@ void PcdAsciiIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatc
 //      std::uint32_t rgb = fromBGRAfloat_to_RGB(batch->colors[i]);
       std::cerr << "rgb: r=" << (std::uint32_t)uint8_color[0] << " g=" << (std::uint32_t)uint8_color[1] << " b=" << (std::uint32_t)uint8_color[2] << " color=" << color << " (" << (float)uint8_color[0] << ", " << (float)uint8_color[1] << ", " << (float)uint8_color[2] << ")" <<std::endl;
       float c = *reinterpret_cast<float*>(&color);;
-      stream << " " << c;
+      stream << " " << c << " " (float)uint8_color[0] << " " << (float)uint8_color[1] << " " << (float)uint8_color[2];
     }
     // intensity_header_field <<
     if (!batch->intensities.empty()) {
