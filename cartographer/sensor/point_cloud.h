@@ -23,6 +23,7 @@
 #include "cartographer/sensor/proto/sensor.pb.h"
 #include "cartographer/sensor/rangefinder_point.h"
 #include "cartographer/transform/rigid_transform.h"
+#include "cartographer/io/color.h"
 #include "glog/logging.h"
 
 namespace cartographer {
@@ -115,14 +116,24 @@ struct PointCloudWithIRARR {
   std::vector<uint8_t> rings;
 };
 
-struct PointCloudWithIRARRC {
+struct PointCloudWithIRARRCRGBA {
   TimedPointCloud points;
   std::vector<float> intensities;
   std::vector<uint16_t> reflectivities;
   std::vector<uint16_t> ambients;
   std::vector<uint32_t> ranges;
   std::vector<uint8_t> rings;
-  std::vector<uint32_t> colors;
+  std::vector<uint32_t> colors_rgba;
+};
+
+struct PointCloudWithIRARRCRGB {
+  TimedPointCloud points;
+  std::vector<float> intensities;
+  std::vector<uint16_t> reflectivities;
+  std::vector<uint16_t> ambients;
+  std::vector<uint32_t> ranges;
+  std::vector<uint8_t> rings;
+  std::vector<uint32_t> colors_rgb;
 };
 
 // Transforms 'point_cloud' according to 'transform'.

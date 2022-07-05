@@ -63,7 +63,7 @@ struct PointsBatch {
   std::vector<float> intensities;
 
   // Colors are optional. If set, they are RGB values.
-  std::vector<FloatColor> colors;
+  std::vector<FloatColorWithAlpha> colors;
 
   // custom fields
   std::vector<uint16_t> reflectivities;
