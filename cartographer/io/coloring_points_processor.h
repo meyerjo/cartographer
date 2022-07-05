@@ -31,7 +31,7 @@ class ColoringPointsProcessor : public PointsProcessor {
  public:
   constexpr static const char* kConfigurationFileActionName = "color_points";
 
-  ColoringPointsProcessor(const FloatColor& color, const std::string& frame_id,
+  ColoringPointsProcessor(const FloatColorWithAlpha& color, const std::string& frame_id,
                           PointsProcessor* next);
 
   static std::unique_ptr<ColoringPointsProcessor> FromDictionary(
@@ -46,7 +46,7 @@ class ColoringPointsProcessor : public PointsProcessor {
   FlushResult Flush() override;
 
  private:
-  const FloatColor color_;
+  const FloatColorWithAlpha color_;
   const std::string frame_id_;
   PointsProcessor* const next_;
 };

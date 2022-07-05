@@ -173,6 +173,16 @@ void WriteBinaryPcdPointColor(const Uint8Color& color,
   CHECK(file_writer->Write(buffer, 4));
 }
 
+void WriteBinaryPcdPointColor(const Uint8ColorWithAlpha& color,
+                              FileWriter* const file_writer) {
+  char buffer[4];
+  buffer[0] = color[2];
+  buffer[1] = color[1];
+  buffer[2] = color[0];
+  buffer[3] = 0;
+  CHECK(file_writer->Write(buffer, 4));
+}
+
 }  // namespace
 
 std::unique_ptr<PcdIntensityWritingPointsProcessor>

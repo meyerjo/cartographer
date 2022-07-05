@@ -41,14 +41,24 @@ inline uint8 FloatComponentToUint8(float c) {
 
 inline float Uint8ComponentToFloat(uint8 c) { return c / 255.f; }
 
-inline Uint8Color ToUint8Color(const FloatColor& color) {
+inline Uint8ColorWithAlpha ToUint8Color(const FloatColor& color) {
   return {{FloatComponentToUint8(color[0]), FloatComponentToUint8(color[1]),
-           FloatComponentToUint8(color[2])}};
+           FloatComponentToUint8(color[2]), 255}};
 }
 
-inline FloatColor ToFloatColor(const Uint8Color& color) {
+inline Uint8ColorWithAlpha ToUint8Color(const FloatColorWithAlpha& color) {
+  return {{FloatComponentToUint8(color[0]), FloatComponentToUint8(color[1]),
+           FloatComponentToUint8(color[2]), FloatComponentToUint8(color[3])}};
+}
+
+inline FloatColorWithAlpha ToFloatColor(const Uint8Color& color) {
   return {{Uint8ComponentToFloat(color[0]), Uint8ComponentToFloat(color[1]),
-           Uint8ComponentToFloat(color[2])}};
+           Uint8ComponentToFloat(color[2]), 1.f}};
+}
+
+inline FloatColorWithAlpha ToFloatColor(const Uint8ColorWithAlpha& color) {
+  return {{Uint8ComponentToFloat(color[0]), Uint8ComponentToFloat(color[1]),
+           Uint8ComponentToFloat(color[2]), Uint8ComponentToFloat(color[3])}};
 }
 
 inline Uint8ColorWithAlpha ToUint8ColorWithAlpha(const FloatColorWithAlpha& color) {
@@ -61,13 +71,30 @@ inline FloatColorWithAlpha ToFloatColorWithAlpha(const Uint8ColorWithAlpha& colo
            Uint8ComponentToFloat(color[2]), Uint8ComponentToFloat(color[3])}};
 }
 
-inline Uint8ColorWithAlpha ToUint8AppendAlphaChannel(const Uint8Color& color) {
+inline Uint8ColorWithAlpha AppendAlphaChannel(const Uint8Color& color) {
   return {{color[0], color[1], color[2], 255}};
 }
 
-inline FloatColorWithAlpha ToUint8AppendAlphaChannel(const FloatColor& color) {
+inline FloatColorWithAlpha AppendAlphaChannel(const FloatColor& color) {
   return {{color[0], color[1], color[2], 1.f}};
 }
+
+inline Uint8ColorWithAlpha AppendAlphaChannel(const Uint8ColorWithAlpha& color) {
+  return color;
+}
+
+inline FloatColorWithAlpha AppendAlphaChannel(const FloatColorWithAlpha& color) {
+  return color;
+}
+
+inline Uint8Color DropAlphaChannel(const Uint8ColorWithAlpha& color) {
+  return {{color[0], color[1], color[2]}};
+}
+
+inline FloatColor DropAlphaChannel(const FloatColorWithAlpha& color) {
+  return {{color[0], color[1], color[2]}};
+}
+
 
 }  // namespace io
 }  // namespace cartographer

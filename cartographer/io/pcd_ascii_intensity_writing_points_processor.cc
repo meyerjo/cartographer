@@ -199,7 +199,7 @@ void PcdAsciiIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatc
     stream << batch->points[i].position[0] << " " << batch->points[i].position[1] << " " << batch->points[i].position[2];
     //  color_header_field <<
     if (!batch->colors.empty()) {
-      cartographer::io::Uint8Color uint8_color = ToUint8Color(batch->colors[i]);
+      cartographer::io::Uint8ColorWithAlpha uint8_color = ToUint8Color(batch->colors[i]);
       std::uint32_t color =  ((std::uint32_t)uint8_color[0] << 16 | (std::uint32_t)uint8_color[1] << 8 | (std::uint32_t)uint8_color[2]);
 //      std::uint32_t rgb = fromBGRAfloat_to_RGB(batch->colors[i]);
       std::cerr << "rgb: r=" << (std::uint32_t)uint8_color[0] << " g=" << (std::uint32_t)uint8_color[1] << " b=" << (std::uint32_t)uint8_color[2] << " color=" << color << " (" << (float)uint8_color[0] << ", " << (float)uint8_color[1] << ", " << (float)uint8_color[2] << ")" <<std::endl;

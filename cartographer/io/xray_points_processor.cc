@@ -97,7 +97,7 @@ Image IntoImage(const PixelDataMatrix& matrix, double saturation_factor) {
       const FloatColor color = {{Mix(1.f, cell.mean_r, saturation),
                                  Mix(1.f, cell.mean_g, saturation),
                                  Mix(1.f, cell.mean_b, saturation)}};
-      image.SetPixel(x, y, ToUint8Color(color));
+      image.SetPixel(x, y, DropAlphaChannel(ToUint8Color(color)));
     }
   }
   return image;
@@ -220,7 +220,7 @@ void XRayPointsProcessor::WriteVoxels(const Aggregation& aggregation,
 
 void XRayPointsProcessor::Insert(const PointsBatch& batch,
                                  Aggregation* const aggregation) {
-  constexpr FloatColor kDefaultColor = {{0.f, 0.f, 0.f}};
+  constexpr FloatColorWithAlpha kDefaultColor = {{0.f, 0.f, 0.f, 0.f}};
   for (size_t i = 0; i < batch.points.size(); ++i) {
     const sensor::RangefinderPoint camera_point = transform_ * batch.points[i];
     const Eigen::Array3i cell_index =

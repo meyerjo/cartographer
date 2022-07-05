@@ -27,7 +27,7 @@ void RemovePoints(absl::flat_hash_set<int> to_remove, PointsBatch* batch) {
   if (!batch->intensities.empty()) {
     intensities.reserve(new_num_points);
   }
-  std::vector<FloatColor> colors;
+  std::vector<FloatColorWithAlpha> colors;
   if (!batch->colors.empty()) {
     colors.reserve(new_num_points);
   }

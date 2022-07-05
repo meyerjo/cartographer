@@ -37,7 +37,7 @@ ColoringPointsProcessor::FromDictionary(
                                                     frame_id, next);
 }
 
-ColoringPointsProcessor::ColoringPointsProcessor(const FloatColor& color,
+ColoringPointsProcessor::ColoringPointsProcessor(const FloatColorWithAlpha& color,
                                                  const std::string& frame_id,
                                                  PointsProcessor* const next)
     : color_(color), frame_id_(frame_id), next_(next) {}

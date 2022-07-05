@@ -82,6 +82,12 @@ void WriteBinaryPlyPointColor(const Uint8Color& color,
                            color.size()));
 }
 
+void WriteBinaryPlyPointColor(const Uint8ColorWithAlpha& color,
+                              FileWriter* const file_writer) {
+  CHECK(file_writer->Write(reinterpret_cast<const char*>(color.data()),
+                           color.size()));
+}
+
 }  // namespace
 
 std::unique_ptr<PlyWritingPointsProcessor>
