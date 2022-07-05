@@ -27,6 +27,8 @@ namespace io {
 
 using Uint8Color = std::array<uint8, 3>;
 using FloatColor = std::array<float, 3>;
+using Uint8ColorWithAlpha = std::array<uint8, 4>;
+using FloatColorWithAlpha = std::array<float, 4>;
 
 // A function for on-demand generation of a color palette, with every two
 // direct successors having large contrast.
@@ -47,6 +49,24 @@ inline Uint8Color ToUint8Color(const FloatColor& color) {
 inline FloatColor ToFloatColor(const Uint8Color& color) {
   return {{Uint8ComponentToFloat(color[0]), Uint8ComponentToFloat(color[1]),
            Uint8ComponentToFloat(color[2])}};
+}
+
+inline Uint8ColorWithAlpha ToUint8ColorWithAlpha(const FloatColorWithAlpha& color) {
+  return {{FloatComponentToUint8(color[0]), FloatComponentToUint8(color[1]),
+           FloatComponentToUint8(color[2]), FloatComponentToUint8(color[3])}};
+}
+
+inline FloatColorWithAlpha ToFloatColorWithAlpha(const Uint8ColorWithAlpha& color) {
+  return {{Uint8ComponentToFloat(color[0]), Uint8ComponentToFloat(color[1]),
+           Uint8ComponentToFloat(color[2]), Uint8ComponentToFloat(color[3])}};
+}
+
+inline Uint8ColorWithAlpha ToUint8AppendAlphaChannel(const Uint8Color& color) {
+  return {{color[0], color[1], color[2], 255}};
+}
+
+inline FloatColorWithAlpha ToUint8AppendAlphaChannel(const FloatColor& color) {
+  return {{color[0], color[1], color[2], 1.f}};
 }
 
 }  // namespace io
