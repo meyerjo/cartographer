@@ -39,7 +39,15 @@ TransformInterpolationBuffer::TransformInterpolationBuffer(
     const mapping::proto::Trajectory& trajectory, int64 timestamp_threshold) {
     // TODO: check if we can skip stuff here
   int kept = 0, dropped = 0;
+  int64_t minimum_value = std::numeric_limits<int64_t>::max(), maximum_value = std::numeric_limits<int64_t>::min();
   for (const mapping::proto::Trajectory::Node& node : trajectory.node()) {
+    if (node.timestamp() < minimum_value) {
+        minimum_value = node.timestamp();
+    }
+    if (node.timestamp() > maximum_value) {
+        maximum_value = node.timestamp();
+    }
+
     if (node.timestamp() > timestamp_threshold) {
         dropped++;
         continue;
@@ -49,6 +57,7 @@ TransformInterpolationBuffer::TransformInterpolationBuffer(
          transform::ToRigid3(node.pose()));
   }
   std::cerr << "kept= " << kept << ", dropped= " << dropped << std::endl;
+  std::cerr << "minimum timestamp: " << minimum_value << ", maximum timestamp: " << maximum_value << " threshold: " << timestamp_threshold << std::endl;
 }
 
 void TransformInterpolationBuffer::Push(const common::Time time,
