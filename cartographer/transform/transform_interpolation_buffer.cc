@@ -39,7 +39,7 @@ TransformInterpolationBuffer::TransformInterpolationBuffer(
     const mapping::proto::Trajectory& trajectory, int64 timestamp_threshold) {
     // TODO: check if we can skip stuff here
   for (const mapping::proto::Trajectory::Node& node : trajectory.node()) {
-    if (node.timestamp() < timestamp_threshold) {
+    if (node.timestamp() > timestamp_threshold) {
         continue;
     }
     Push(common::FromUniversal(node.timestamp()),
