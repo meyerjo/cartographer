@@ -38,13 +38,17 @@ TransformInterpolationBuffer::TransformInterpolationBuffer(
 TransformInterpolationBuffer::TransformInterpolationBuffer(
     const mapping::proto::Trajectory& trajectory, int64 timestamp_threshold) {
     // TODO: check if we can skip stuff here
+  int kept = 0, dropped = 0;
   for (const mapping::proto::Trajectory::Node& node : trajectory.node()) {
     if (node.timestamp() > timestamp_threshold) {
+        dropped++;
         continue;
     }
+    kept++;
     Push(common::FromUniversal(node.timestamp()),
          transform::ToRigid3(node.pose()));
   }
+  std::cerr << "kept= " << kept << ", dropped= " << dropped << std::endl;
 }
 
 void TransformInterpolationBuffer::Push(const common::Time time,
