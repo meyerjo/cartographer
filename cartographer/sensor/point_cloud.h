@@ -144,7 +144,7 @@ struct PointCloudWithIRARRCRGBAC {
   std::vector<uint32_t> ranges;
   std::vector<uint8_t> rings;
   std::vector<uint32_t> colors_rgba;
-  std::vector<int> classifications;
+  std::vector<uint32_t> classifications;
 };
 
 // Transforms 'point_cloud' according to 'transform'.

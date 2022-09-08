@@ -71,7 +71,7 @@ struct PointsBatch {
   std::vector<uint16_t> ambients;
   std::vector<uint32_t> ranges;
 
-  std::vector<int> classifications;
+  std::vector<uint32_t> classifications;
 };
 
 // Removes the indices in 'to_remove' from 'batch'.
