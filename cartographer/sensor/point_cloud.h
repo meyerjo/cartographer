@@ -107,7 +107,7 @@ struct PointCloudWithIntensities {
 };
 
 //  print(df['intensity', 'reflectivity' ,'ambient' , 'range'].hist()
-struct PointCloudWithIRARR {
+struct PointCloud_Ouster {
   TimedPointCloud points;
   std::vector<float> intensities;
   std::vector<uint16_t> reflectivities;
@@ -116,7 +116,7 @@ struct PointCloudWithIRARR {
   std::vector<uint8_t> rings;
 };
 
-struct PointCloudWithIRARRCRGBA {
+struct PointCloud_Ouster_WithRGBA {
   TimedPointCloud points;
   std::vector<float> intensities;
   std::vector<uint16_t> reflectivities;
@@ -124,16 +124,6 @@ struct PointCloudWithIRARRCRGBA {
   std::vector<uint32_t> ranges;
   std::vector<uint8_t> rings;
   std::vector<uint32_t> colors_rgba;
-};
-
-struct PointCloudWithIRARRCRGB {
-  TimedPointCloud points;
-  std::vector<float> intensities;
-  std::vector<uint16_t> reflectivities;
-  std::vector<uint16_t> ambients;
-  std::vector<uint32_t> ranges;
-  std::vector<uint8_t> rings;
-  std::vector<uint32_t> colors_rgb;
 };
 
 struct PointCloud_Ouster_WithRGBAClass {
