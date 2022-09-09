@@ -73,9 +73,9 @@ void WriteBinaryPcdIntensityHeader(
   std::string ambient_header_size = !has_ambient ? "" : " 4";
   std::string ambient_header_count = !has_ambient ? "" : " 1";
 
-  std::string range_header_field = !has_range ? "" : " userdata";
-  std::string range_header_type = !has_range ? "" : " F";
-  std::string range_header_size = !has_range ? "" : " 4";
+  std::string range_header_field = !has_range ? "" : " pointsourceid";
+  std::string range_header_type = !has_range ? "" : " U";
+  std::string range_header_size = !has_range ? "" : " 2";
   std::string range_header_count = !has_range ? "" : " 1";
 
   std::string ring_header_field = !has_ring ? "" : " ring";
@@ -238,7 +238,7 @@ void PcdAsciiIntensityWritingPointsProcessor::Process(std::unique_ptr<PointsBatc
     }
     // range_header_field <<
     if (!batch->ranges.empty() && export_range_) {
-      stream << " " << float_eigen_range_values[i];
+      stream << " " << static_cast<unsigned short>(float_eigen_range_values[i]/100.);
     }
     //  ring_header_field <<
     if (!batch->rings.empty() && export_ring_) {
