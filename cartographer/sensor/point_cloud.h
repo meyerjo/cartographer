@@ -136,7 +136,7 @@ struct PointCloudWithIRARRCRGB {
   std::vector<uint32_t> colors_rgb;
 };
 
-struct PointCloudWithIRARRCRGBAC {
+struct PointCloud_Ouster_WithRGBAClass {
   TimedPointCloud points;
   std::vector<float> intensities;
   std::vector<uint16_t> reflectivities;
