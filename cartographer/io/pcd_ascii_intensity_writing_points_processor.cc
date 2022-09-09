@@ -28,6 +28,7 @@
 #include "absl/memory/memory.h"
 #include "cartographer/common/lua_parameter_dictionary.h"
 #include "cartographer/io/points_batch.h"
+#include "cartographer/common/time.h"
 #include "glog/logging.h"
 
 namespace cartographer {
